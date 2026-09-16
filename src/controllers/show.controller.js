@@ -193,7 +193,9 @@ const deleteShow = asyncHandler(async(req, res)=>{
 });
 
 const getShowSeatAvailable = asyncHandler(async(req,res)=>{
+
     const { showId } = req.params;
+
 
     // find the show
 
@@ -205,11 +207,13 @@ const getShowSeatAvailable = asyncHandler(async(req,res)=>{
         throw new apiError(404, "Show not Found");
     }
 
+
     // find all the seats belonging to the show's screen
 
     const seats = await Seat.find({
         screen: show.screen._id
     });
+
 
     if(!seats || seats.length === 0){
         throw new apiError(404, " No seats found for this screen");
@@ -218,6 +222,7 @@ const getShowSeatAvailable = asyncHandler(async(req,res)=>{
     // find booking for the particular show
 
     const bookings = await Booking.find({
+        show: showId,
         status: { $ne: "CANCELLED"}                  // ne - not equal
     });
 
@@ -227,12 +232,16 @@ const getShowSeatAvailable = asyncHandler(async(req,res)=>{
         booking => booking.seats.map(seat => seat.toString())
     );
 
+    console.log("bookedSeatsIds:", bookedSeatsIds);
+
     // mark every seat as available or booked 
 
     const seatAvailability = seats.map(seat => ({
         ...seat.toObject(),
         isAvailable: !bookedSeatsIds.includes(seat._id.toString())
     }));
+
+    console.log("seatAvailability:", seatAvailability);
 
     return res
         .status(200)

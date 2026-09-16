@@ -7,10 +7,13 @@ import { apiError } from "../utils/apiError.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { sendNotification } from "../services/notification.service.js";
+import { lockSeat, releaseSeat } from "../services/seatLock.service.js";
 
 const createBooking = asyncHandler(async(req,res)=>{
 
     const session = await mongoose.startSession();
+
+    const lockedSeats = [];
     
     try {
 
@@ -69,29 +72,55 @@ const createBooking = asyncHandler(async(req,res)=>{
     
         for(const seatId of uniqueSeats){
 
-            const reservedSeat = await ShowSeat
-                .findOneAndUpdate(
-                    {
-                        show: show,
-                        seat: seatId,
-                        status: "AVAILABLE"
-                    },
-                    {
-                        $set: {
-                            status: "BOOKED"
-                        }
-                    },
-                    {
-                        new:true,
-                        session
-                    }
+            //check showseat is actually available
 
+            const showSeat = await ShowSeat.findOne({
+                show: show,
+                seat: seatId,
+                status: "AVAILABLE"
+            }).session(session);
+
+            if(!showSeat){
+
+                //Release seats that we already locked
+
+                for(const lockedSeatId of lockedSeats){
+                    await releaseSeat(show, lockedSeatId);
+                }
+
+                const seat = seatsExist.find(
+                    item => item._id.toString() === seatId.toString()
                 );
-            
-            if(!reservedSeat){
-                const seat = seatsExist.find((item)=> item._id.toString()=== seatId.toString());
-                throw new apiError(409, `Seat ${seat?.seatNumber || seatId} is already booked`);
+
+                throw new apiError(409, `Seat ${seat?.seatNumber || seatId} is already booked or unavialable`);
             }
+
+            // try to acquire Redis lock
+
+            const locked = await lockSeat(
+                show,
+                seatId,
+                userId.toString(),
+                300
+            );
+
+            if(!locked){
+
+                // release previously locked seats
+
+                for(const lockedSeatId of lockedSeats){
+                    await releaseSeat(show, lockedSeatId);
+                }
+
+                const seat = seatsExist.find(
+                    item => item._id.toString() === seatId.toString()
+                );
+
+                throw new apiError(409, `Seat ${seat?.seatNumber || seatId} is currently locked by another user`);
+            }
+
+            lockedSeats.push(seatId);
+ 
         }
     
         //7. calculate total amount
@@ -147,8 +176,16 @@ const createBooking = asyncHandler(async(req,res)=>{
             .json(new apiResponse(201, createdBooking, "Booking created Successfully")); 
     }
     catch (error) {
-        await session.abortTransaction();
-        session.endSession();
+
+        if(session.inTransaction()){
+            await session.abortTransaction();
+        }
+
+        // Release Redis Locks if booking creation failed
+
+        for(const seatId of lockedSeats){
+            await releaseSeat(Show, seatId);
+        }
 
         throw error;
     }

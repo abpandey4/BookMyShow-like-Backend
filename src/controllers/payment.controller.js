@@ -5,6 +5,8 @@ import { apiError } from "../utils/apiError.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { sendNotification } from "../services/notification.service.js";
+import { ShowSeat } from "../models/showSeat.model.js";
+import { getSeatLock, releaseSeat } from "../services/seatLock.service.js";
 
 const createPayment = asyncHandler(async(req, res)=>{
     const { bookingId, paymentMethod } = req.body;
@@ -123,6 +125,52 @@ const updatePaymentStatus = asyncHandler(async(req,res)=>{
 
         if(paymentStatus === "SUCCESS"){
 
+            // Check every seat is still locked by this user
+
+            console.log("Checking Redis lock");
+            console.log("Show:", booking.show.toString());
+
+            for(const seatId of booking.seats){
+
+                console.log("Seat:", seatId.toString());
+                
+                const lockOwner = await getSeatLock(
+                    booking.show,
+                    seatId
+                );
+
+                if(lockOwner !== userId.toString()){
+                    throw new apiError(409, `Seat ${seatId} lock has expired or belongs to another user` );
+                }
+            }
+
+            // permanently book the seats
+
+            for(const seatId of booking.seats){
+                const showSeat = await ShowSeat.findOneAndUpdate(
+                    {
+                        show: booking.show,
+                        seat: seatId,
+                        status: "AVAILABLE"
+                    },
+                    {
+                        $set: {
+                            status: "BOOKED"
+                        }
+                    },
+                    {
+                        new: true,
+                        session
+                    }
+                );
+
+                if(!showSeat){
+                    throw new apiError(409, `Seat ${seatId} is no longer available`);
+                }
+            }
+
+            //confirm booking 
+
             booking.status = "CONFIRMED";
             booking.paymentStatus = "PAID";
         } else if(paymentStatus === "FAILED"){
@@ -134,7 +182,25 @@ const updatePaymentStatus = asyncHandler(async(req,res)=>{
         // 8. Commit transaction
 
         await session.commitTransaction();
-        session.endSession();
+
+        // release Redis locks
+
+        if(paymentStatus === "SUCCESS"){
+            for(const seatId of booking.seats){
+                await releaseSeat(booking.show, seatId);
+            }
+        }
+
+         if(paymentStatus === "FAILED"){
+
+            // Release Redis seat locks
+            for(const seatId of booking.seats){
+                await releaseSeat(booking.show, seatId);
+            }
+        }
+
+
+        // send notifications
 
         if(paymentStatus === "SUCCESS"){
             try {
@@ -154,6 +220,7 @@ const updatePaymentStatus = asyncHandler(async(req,res)=>{
             }
         }
 
+       
         if(paymentStatus === "FAILED"){
             try {
                 await sendNotification({

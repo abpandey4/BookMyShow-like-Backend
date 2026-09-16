@@ -1,12 +1,30 @@
 # 🎬 BookMyShow-like Backend
 
-A backend API for a BookMyShow-like movie ticket booking platform built with Node.js and Express.js.
+A production-oriented backend API for a BookMyShow-like movie ticket booking platform built with **Node.js, Express.js, MongoDB, Redis, and Docker**.
 
-The project provides APIs for user authentication, movies, theatres, screens, seats, shows, bookings, payments, semantic movie search, caching, media uploads, and admin management.
+The project provides APIs for:
 
-# 🚀 Features
+* User authentication and authorization
+* Admin management
+* Movies
+* Theatres
+* Screens
+* Seats
+* Shows
+* Seat availability and booking
+* Redis-based temporary seat locking
+* Payments and refunds
+* Email notifications
+* Semantic movie search using embeddings
+* Caching
+* Media uploads
+* Docker-based containerization
 
-# 👤 User Management
+The project follows a modular backend architecture with separate routes, controllers, models, services, middlewares, utilities, and configuration layers.
+
+## 🚀 Features
+
+### 👤 User Management
 
 * User registration
 * User login/logout
@@ -16,7 +34,7 @@ The project provides APIs for user authentication, movies, theatres, screens, se
 * Protected routes
 * User profile
 
-# 🔐 Authentication & Authorization
+### 🔐 Authentication & Authorization
 
 * JWT authentication
 * Access/refresh token mechanism
@@ -26,7 +44,7 @@ The project provides APIs for user authentication, movies, theatres, screens, se
 * verifyJWT middleware
 * isAdmin middleware
 
-# 🎬 Movie Management
+### 🎬 Movie Management
 
 * Create movie
 * Get all movies
@@ -38,7 +56,7 @@ The project provides APIs for user authentication, movies, theatres, screens, se
 * Movie sorting
 * Semantic movie search
 
-# 🏢 Theatre Management
+### 🏢 Theatre Management
 
 * Create theatre
 * Get theatres
@@ -46,7 +64,7 @@ The project provides APIs for user authentication, movies, theatres, screens, se
 * Delete theatre
 * Theatre and screen relationship
 
-# 🖥️ Screen Management
+### 🖥️ Screen Management
 
 * Create screens
 * Get screens
@@ -54,7 +72,7 @@ The project provides APIs for user authentication, movies, theatres, screens, se
 * Delete screens
 * Screen and seat relationship
 
-# 💺 Seat Management
+### 💺 Seat Management
 
 * Create seats
 * Get seats
@@ -63,7 +81,7 @@ The project provides APIs for user authentication, movies, theatres, screens, se
 * Seat activation/deactivation
 * Show-seat availability
 
-# 🎞️ Show Management
+### 🎞️ Show Management
 
 * Create shows
 * Get shows
@@ -71,18 +89,32 @@ The project provides APIs for user authentication, movies, theatres, screens, se
 * Deactivate shows
 * Movie-screen-show relationship
 
-# 🎟️ Booking System
+### 🎟️ Booking System
 
-* Create bookings
-* Validate shows and seats
-* Prevent duplicate seat booking
-* Reserve seats
-* Calculate booking amount
-* Booking cancellation
-* Release reserved seats
-* MongoDB transaction-based operations were implemented
+* Show and seat validation
+* Seat availability checking
+* Temporary seat locking using Redis
+* Duplicate seat prevention
+* PENDING booking creation
+* Automatic seat lock release
+* Booking confirmation after successful payment
+* Payment failure handling
+* MongoDB transactions for booking consistency
 
-# 💳 Payment System
+### ⚡ Redis
+
+* Redis-based temporary seat locking
+* Automatic lock expiration
+* Seat lock ownership validation
+* Lock release after successful or failed payment
+
+### 🔎 Semantic Search
+
+* AI-powered semantic movie search
+* Search based on meaning and context rather than exact keyword matching
+* Vector embeddings for movie search
+
+### 💳 Payment System
 
 * Payment creation
 * Payment status handling
@@ -92,15 +124,29 @@ The project provides APIs for user authentication, movies, theatres, screens, se
 * Payment history
 * Refund handling were implemented
 
-# 🔎 Semantic Search
+### 🔎 Semantic Search
 
-* Movie embeddings
+The project implements AI-powered semantic movie search using **text embeddings and vector similarity search**.
+
+### How it works
+
+Search Query
+    ↓
+Generate Embedding
+    ↓
+Vector Similarity Search
+    ↓
+Retrieve Relevant Movies
+
+### Features
+
+* Movie text embeddings
 * Vector data storage
 * Vector similarity search
-* Semantic movie search
-* Combined normal and semantic search
+* Meaning-based movie search
+* Combination of Traditional and Semantic Search
 
-# ⚡ Performance & Caching
+### ⚡ Performance & Caching
 
 * Redis caching
 * Movie/show data caching
@@ -108,23 +154,25 @@ The project provides APIs for user authentication, movies, theatres, screens, se
 * MongoDB indexes
 * Query optimization
 
-# ☁️ Media Management
+### ☁️ Media Management
 
 * Cloudinary integration
 * Movie poster/image uploads
 * Multer file upload handling
 * Media management
 
-# 📧 Notifications
+### 📧 Notifications
 
 * Booking-related notifications
 * Payment-related notifications
 * Cancellation-related notifications
 * Email delivery using Resend
 
-# 👨‍💼 Admin Management
+### 👨‍💼 Admin Management
 
-Admin-only management APIs are provided for:
+The backend provides protected admin APIs for managing the movie booking infrastructure.
+
+Admin operations include:
 
 * Movies
 * Theatres
@@ -132,37 +180,71 @@ Admin-only management APIs are provided for:
 * Seats
 * Shows
 
-Admin access is protected using JWT authentication and role-based authorization.
+Admin routes are protected using:
 
-# 🛠️ Tech Stack
+* `verifyJWT` middleware
+* `isAdmin` middleware
+* Role-based authorization
 
-**Technology**                      **Purpose**
+Only users with:
 
-Node.js                             JavaScript runtime
-Express.js                          Backend framework
-MongoDB Atlas                       Database
-Mongoose                            MongoDB ODM
-Redis                               Caching
-JWT                                 Authentication
-bcrypt                              Password hashing
-Cloudinary                          Image/media storage
-Multer                              File uploads
-Gemini                              Semantic search / embeddings
-Resend                              Email delivery
-Docker                              Containerization
-Azure                               Cloud deployment
-Git                                 Version control
-GitHub                              Source code hosting
-Postman                             API testing
+```js
+role: "ADMIN"
+```
+
+## 🛠️ Tech Stack
+
+### Backend
+* Node.js
+* Express.js
+* JavaScript (ES6+)
+
+### Database
+* MongoDB
+* MongoDB Atlas
+* Mongoose
+
+### Caching & Locking
+* Redis
+
+### Middleware & Security
+* JWT
+* bcrypt
+* HTTP-only cookies
+* Express Rate Limit
+* Helmet
+* Multer
+* CORS
+
+### File & Media Storage
+* Cloudinary
+
+### Email Notifications
+* Resend
+
+### AI / Search
+* Semantic Search
+* Vector Embeddings
+
+### DevOps & Deployment
+* Docker
+* Azure
+* Git
+* GitHub
+
+### API Testing
+* Postman
 
 
-# 📁 Project Structure
+## 📁 Project Structure
 
 BookMyShow-like-Backend/
 │
 ├── public/
+│   └── temp/
 │
 ├── src/
+│   │
 │   ├── config/
 │   │   ├── cloudinary.js
 │   │   ├── db.js
@@ -170,34 +252,84 @@ BookMyShow-like-Backend/
 │   │   └── redis.js
 │   │
 │   ├── controllers/
+│   │   ├── booking.controller.js
+│   │   ├── movie.controller.js
+│   │   ├── payment.controller.js
+│   │   ├── screen.controller.js
+│   │   ├── seat.controller.js
+│   │   ├── show.controller.js
+│   │   ├── theatre.controller.js
+│   │   └── user.controller.js
 │   │
 │   ├── middlewares/
-│   │   ├── auth.middleware.js
 │   │   ├── admin.middleware.js
+│   │   ├── auth.middleware.js
 │   │   ├── error.middleware.js
-│   │   └── multer.middleware.js
+│   │   ├── multer.middleware.js
+│   │   └── rateLimit.middleware.js
 │   │
 │   ├── models/
+│   │   ├── booking.model.js
+│   │   ├── movie.model.js
+│   │   ├── payment.model.js
+│   │   ├── screen.model.js
+│   │   ├── seat.model.js
+│   │   ├── show.model.js
+│   │   ├── showSeat.model.js
+│   │   ├── theatre.model.js
+│   │   └── user.model.js
 │   │
 │   ├── routes/
+│   │   ├── admin.movie.route.js
+│   │   ├── admin.screen.route.js
+│   │   ├── admin.seat.route.js
+│   │   ├── admin.show.route.js
+│   │   ├── admin.theatre.route.js
+│   │   ├── booking.route.js
+│   │   ├── index.js
+│   │   ├── movie.route.js
+│   │   ├── payment.route.js
+│   │   ├── screen.route.js
+│   │   ├── seat.route.js
+│   │   ├── show.route.js
+│   │   ├── theatre.route.js
+│   │   └── user.route.js
 │   │
 │   ├── scripts/
+│   │   ├── createAdmin.js
+│   │   └── generateMovieEmbeddings.js
 │   │
 │   ├── services/
+│   │   ├── cache.service.js
+│   │   ├── cloudinary.service.js
+│   │   ├── embedding.service.js
+│   │   ├── notification.service.js
+│   │   └── seatLock.service.js
 │   │
-│   ├── utils/
-│   │
-│   ├── app.js
-│   └── index.js
+│   └── utils/
+│       ├── apiError.js
+│       ├── apiResponse.js
+│       ├── asyncHandler.js
+│       ├── movie.utils.js
+│       └── movieText.js
 │
+├── app.js
+├── index.js
+├── testEmbedding.js
+│
+├── .dockerignore
+├── .env.example
+├── .env.docker.example
 ├── .gitignore
+│
+├── docker-compose.yml
+├── Dockerfile
+│
 ├── package.json
 ├── package-lock.json
 └── README.md
 
-`.env` is intentionally not included in the repository structure because it contains environment-specific secrets and configuration.
-
-# 🔑 Authentication Flow
+### 🔑 Authentication Flow
 
 The application uses JWT-based authentication.
 
@@ -229,7 +361,7 @@ Admin Controller
     ↓
 Database Operation
 
-# 🔐 Admin Authorization
+### 🔐 Admin Authorization
 
 Admin APIs are protected using role-based authorization.
 
@@ -261,7 +393,7 @@ Allow    403
  ↓
 Controller
 
-# 🔎 Movie Search
+### 🔎 Movie Search
 
 The project supports traditional filtering/search as well as semantic movie search.
 
@@ -281,7 +413,7 @@ Vector Similarity Search
      ↓
 Relevant Movies
 
-# ⚡ Redis Caching
+### ⚡ Redis Caching
 
 Redis is used to improve application performance by caching frequently requested data.
 
@@ -300,29 +432,68 @@ Data       ↓
             ↓
          Return Data
 
-# 🎟️ Booking Flow
+### 🎟️ Booking Flow
 
-The booking system validates the requested show and seats before creating a booking.
+The booking system uses MongoDB transactions and Redis-based temporary seat locking to handle seat reservations safely.
 
 User Selects Show
        ↓
 Select Seats
        ↓
-Validate Show
+Validate Show & Seats
        ↓
-Validate Seat Availability
+Check ShowSeat Availability
        ↓
-Calculate Amount
+Acquire Redis Seat Lock
        ↓
-Create Booking
+Create PENDING Booking
        ↓
-Payment
+Create Payment
        ↓
-Booking Status
+Payment Processing
+       ↓
+   ┌───────────────┐
+   ↓               ↓
+SUCCESS          FAILED
+   ↓               ↓
+Book Seats       Release Redis Locks
+Permanently
+   ↓
+Booking CONFIRMED
+   ↓
+Release Redis Locks
 
-The implementation also includes handling for duplicate/invalid seat selections and booking cancellation flows.
+### Redis Seat Locking
 
-# 🧪 API Testing
+Selected seats are temporarily locked in Redis while the payment is pending.
+
+Redis key format:
+
+`seatLock:<showId>:<seatId>`
+
+The lock automatically expires after the configured timeout if the payment is not completed.
+
+Before confirming a successful payment, the system verifies that every selected seat is still locked by the requesting user.
+
+### Payment & Seat Confirmation
+
+For a successful payment:
+
+- Payment status → `SUCCESS`
+- Show seats → `BOOKED`
+- Booking status → `CONFIRMED`
+- Booking payment status → `PAID`
+- Redis seat locks → Released
+
+For a failed payment:
+
+* Payment status → `FAILED`
+* Booking payment status → `FAILED`
+* Redis seat locks → Released
+
+The implementation also handles duplicate/invalid seat selections, unavailable seats, expired Redis locks, booking cancellation, and MongoDB transaction rollback.
+
+### 🧪 API Testing
 
 The APIs are tested using **Postman.**
 
@@ -338,103 +509,76 @@ Testing includes:
 * Admin authorization
 * Edge cases
 
-# 🌐 API Routes
+### 🌐 API Routes
 
-The backend uses versioned APIs under:
+### User Routes
 
-/api/v1
+* `api/v1/users`
+* `api/v1/movies`
+* `/api/v1/theatres`  
+* `/api/v1/screens`  
+* `/api/v1/seats`  
+* `/api/v1/shows`  
+* `/api/v1/bookings`  
+* `/api/v1/payments`
 
-### User APIs
+### Admin Routes
 
-/api/v1/users
+Admin management APIs are separated under the `/api/v1/admin/...` namespace and are protected using `verifyJWT` and `isAdmin`.
 
-### Public Movie APIs
+* `/api/v1/admin/movies`  
+* `/api/v1/admin/theatres`  
+* `/api/v1/admin/screens`  
+* `/api/v1/admin/seats`  
+* `/api/v1/admin/shows`
 
-/api/v1/movies
 
-### Theatre APIs
+### ⚙️ Installation & Setup
 
-/api/v1/theatres
-
-### Screen APIs
-
-/api/v1/screens
-
-### Seat APIs
-
-/api/v1/seats
-
-### Show APIs
-
-/api/v1/shows
-
-### Booking APIs
-
-/api/v1/bookings
-
-### Payment APIs
-
-/api/v1/payments
-
-### Admin APIs
-
-Current admin management routes are separated from public movie read APIs and are protected using `verifyJWT` and `isAdmin`.
-
-Admin URL restructuring to a dedicated `/api/v1/admin/...` namespace is planned as a subsequent project task.
-
-# ⚙️ Installation & Setup
-
-### 1. Clone the repository
+#### 1. Clone the repository
 
 git clone `https://github.com/abpandey4/BookMyShow-like-Backend.git`
 
-### 2. Navigate to the project
+#### 2. Navigate to the project
 
 ```cd BookMyShow-like-Backend```
 
-### 3. Install dependencies
+#### 3. Install dependencies
 
 `npm install`
 
-### 4. Configure environment variables
+#### 4. Configure environment variables
 
 Create a `.env` file in the project root.
 
 Configure the required environment variables for:
 
 * Application/PORT configuration
-
 * MongoDB
-
 * JWT
-
 * Redis
-
 * Cloudinary
-
 * Gemini
-
 * CORS
-
 * RESEND
 
-### 5. Start the development server
+#### 5. Start the development server
 
 npm run dev
 
 The backend will run on the configured application port.
 
-# 🌐 API Base URL
+### 🌐 API Base URL
 
-### Development
+#### Development
 
 `http://localhost:8000`
 
-### API Version
+#### API Version
 
 /api/v1
 
-# 🐳 Docker
+### 🐳 Docker
 
 Docker is used to containerize the backend application.
 
@@ -450,7 +594,7 @@ Backend API
 
 Docker configuration and container testing are part of the deployment stage.
 
-# ☁️ Azure Deployment
+### ☁️ Azure Deployment
 
 The backend is planned for deployment using Microsoft Azure infrastructure.
 
@@ -472,7 +616,7 @@ Cloudinary
 
 Azure deployment and production configuration are part of the final deployment stage.
 
-# 🔒 Security
+### 🔒 Security
 
 * The application uses several backend security practices:
 * JWT authentication
@@ -487,7 +631,7 @@ Azure deployment and production configuration are part of the final deployment s
 * HTTP security headers using Helmet
 * API rate limiting
 
-# 📈 Project Architecture
+### 📈 Project Architecture
 
                     ┌──────────────┐
                     │    Client    │
@@ -518,7 +662,7 @@ Azure deployment and production configuration are part of the final deployment s
          Caching       Media          Semantic
                                       Search
 
-# 🔄 Backend Request Flow
+### 🔄 Backend Request Flow
 
 A typical protected request follows:
 
@@ -540,7 +684,7 @@ Response
 
 Centralized error handling is used to provide consistent error responses.
 
-# 🔧 Environment Configuration
+### 🔧 Environment Configuration
 
 The application uses environment variables for configuration and sensitive credentials.
 
@@ -557,7 +701,7 @@ RESEND configuration
 
 The exact environment variable names should be taken from the project's `.env` configuration.
 
-# 🎯 Future Improvements
+### 🎯 Future Improvements
 
 Possible future improvements include:
 
@@ -570,12 +714,12 @@ Possible future improvements include:
 * Automated testing
 * Advanced observability
 
-# 👨‍💻 Author
+### 👨‍💻 Author
 
 Abhishek Pandey
 
 Backend-focused developer building Node.js applications and exploring cloud technologies, distributed systems, and AI-powered applications.
 
-# 📄 License
+### 📄 License
 
 This project is created for learning, portfolio, and educational purposes.

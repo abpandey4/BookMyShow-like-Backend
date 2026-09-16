@@ -11,7 +11,7 @@ import dotenv from "dotenv";
 import { Movie } from "../models/movie.model.js";
 import connectDB from "../config/db.js";
 import { generateEmbedding } from "../services/embedding.service.js";
-import { createMovieEmbeddingText } from "../utils/movietext.js";
+import { createMovieEmbeddingText } from "../utils/movieText.js";
 
 dotenv.config();
 

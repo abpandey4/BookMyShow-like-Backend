@@ -3,7 +3,7 @@ import { apiError } from "../utils/apiError.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { generateEmbedding } from "../services/embedding.service.js";
-import { createMovieEmbeddingText } from "../utils/movietext.js";
+import { createMovieEmbeddingText } from "../utils/movieText.js";
 import { getCache, setCache, deleteCache } from "../services/cache.service.js";
 import { uploadOnCloudinary } from "../services/cloudinary.service.js";
 import { parseMovieArrays } from "../utils/movie.utils.js";

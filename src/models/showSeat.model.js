@@ -14,7 +14,7 @@ const showSeatSchema = new Schema({
     status:{
         type: String,
         enum: ["AVAILABLE", "LOCKED", "BOOKED"],
-        default: "AVAILALE"
+        default: "AVAILABLE"
     },
     lockedAt:{
         type: Date,
