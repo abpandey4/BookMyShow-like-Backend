@@ -130,6 +130,7 @@ The project implements AI-powered semantic movie search using **text embeddings 
 
 ### How it works
 
+```text
 Search Query
     ↓
 Generate Embedding
@@ -137,6 +138,7 @@ Generate Embedding
 Vector Similarity Search
     ↓
 Retrieve Relevant Movies
+```
 
 ### Features
 
@@ -238,6 +240,7 @@ role: "ADMIN"
 
 ## 📁 Project Structure
 
+```text
 BookMyShow-like-Backend/
 │
 ├── public/
@@ -328,11 +331,13 @@ BookMyShow-like-Backend/
 ├── package.json
 ├── package-lock.json
 └── README.md
+```
 
 ### 🔑 Authentication Flow
 
 The application uses JWT-based authentication.
 
+```text
 User Login
     ↓
 Validate Credentials
@@ -348,9 +353,11 @@ verifyJWT Middleware
 User Authorization
     ↓
 Controller
+```
 
 ### Admin Authentication Flow
 
+```text
 Admin Request
     ↓
 verifyJWT
@@ -360,6 +367,7 @@ isAdmin
 Admin Controller
     ↓
 Database Operation
+```
 
 ### 🔐 Admin Authorization
 
@@ -377,6 +385,7 @@ A normal user attempting to access an admin-protected API is rejected with:
 
 The authorization flow is:
 
+```text
 Request
    ↓
 verifyJWT
@@ -392,6 +401,7 @@ Yes      No
 Allow    403
  ↓
 Controller
+```
 
 ### 🔎 Movie Search
 
@@ -405,6 +415,7 @@ Traditional search uses database queries and filtering to find movies based on s
 
 Semantic search uses embeddings to represent movie-related text and perform similarity-based searching.
 
+```text
 Search Query
      ↓
 Generate Embedding
@@ -412,11 +423,13 @@ Generate Embedding
 Vector Similarity Search
      ↓
 Relevant Movies
+```
 
 ### ⚡ Redis Caching
 
 Redis is used to improve application performance by caching frequently requested data.
 
+```text
 Client Request
       ↓
 Check Redis Cache
@@ -431,11 +444,13 @@ Data       ↓
          Store in Redis
             ↓
          Return Data
+```
 
 ### 🎟️ Booking Flow
 
 The booking system uses MongoDB transactions and Redis-based temporary seat locking to handle seat reservations safely.
 
+```text
 User Selects Show
        ↓
 Select Seats
@@ -462,6 +477,8 @@ Permanently
 Booking CONFIRMED
    ↓
 Release Redis Locks
+
+```
 
 ### Redis Seat Locking
 
@@ -584,6 +601,7 @@ Docker is used to containerize the backend application.
 
 The deployment architecture is:
 
+```text
 Application
      ↓
 Docker Image
@@ -591,6 +609,7 @@ Docker Image
 Docker Container
      ↓
 Backend API
+```
 
 Docker configuration and container testing are part of the deployment stage.
 
