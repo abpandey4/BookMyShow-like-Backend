@@ -615,25 +615,45 @@ Docker configuration and container testing are part of the deployment stage.
 
 ### ☁️ Azure Deployment
 
-The backend is planned for deployment using Microsoft Azure infrastructure.
+The backend has been deployed and tested on a Microsoft Azure Ubuntu Virtual Machine using Docker and Docker Compose.
 
-Target deployment architecture:
+#### Deployment Architecture
 
 Client
-   ↓
-Azure Infrastructure
-   ↓
-Backend Container / VM
-   ↓
-Node.js + Express
-   ↓
+↓
+Azure Public IP
+↓
+Azure Network Security Group
+↓
+Azure Ubuntu VM
+↓
+Docker Compose
+├── Node.js + Express Backend
+└── Redis
+↓
 MongoDB Atlas
-   ↓
-Redis
-   ↓
-Cloudinary
 
-Azure deployment and production configuration are part of the final deployment stage.
+
+#### Azure Infrastructure
+
+- **Azure Virtual Machine** — Ubuntu 24.04 LTS
+- **Node.js** — v24
+- **Docker** — Containerized backend deployment
+- **Docker Compose** — Used to orchestrate the backend and Redis services
+- **Redis** — Running as a Docker container
+- **MongoDB Atlas** — Cloud database
+- **Azure Network Security Group (NSG)** — TCP port `8000` configured for API access
+
+#### Docker Services
+
+The application uses two Docker Compose services:
+
+**Backend**
+
+```text
+Container: bms-backend
+Port: 8000
+```
 
 ### 🔒 Security
 
