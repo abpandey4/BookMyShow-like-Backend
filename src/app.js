@@ -4,6 +4,8 @@
 import express from "express";      // express helps to create BE server and API
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./config/swagger.js";
 import router from "./routes/index.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
 import userRouter from "./routes/user.route.js";
@@ -19,7 +21,10 @@ import helmet from "helmet";
 
 
 
+
 const app = express();                  // create an Express application object
+
+console.log("🔥 CURRENT APP.JS IS LOADED 🔥");
 
 app.use(helmet());                      // it helps secure application by setting up http security headers 
 
@@ -37,8 +42,18 @@ app.get("/", (req,res)=>{
     res.status(200).json({
         success: true,
         message: "BookMyShow Backend API is running"
-    })
-})
+    });
+});
+
+app.get("/swagger-test", (req, res) => {
+    res.send("Swagger route area is working");
+});
+
+app.use(
+    "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec)
+)
 
 app.use("/api/v1", router);
 app.use("/api/v1/users", userRouter);

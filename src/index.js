@@ -9,6 +9,7 @@ import connectDB from "./config/db.js";
 import redisClient from "./config/redis.js";
 import cloudinary from "./config/cloudinary.js";
 
+
 dns.setServers(["8.8.8.8", "8.8.4.4"]);    // this was google dns ip address
 dotenv.config({
     path: './.env'
