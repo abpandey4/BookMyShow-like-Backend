@@ -13,6 +13,10 @@ const options = {
             {
                 url: "http://localhost:8000",
                 description: "Local Development Server"
+            },
+            {
+                url: "https://bookmyshow-like-backend.onrender.com",
+                description: "Production Server"
             }
         ],
 
