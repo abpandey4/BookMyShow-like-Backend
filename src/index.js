@@ -23,7 +23,7 @@ connectDB()
         await redisClient.connect();
         console.log("Redis Connected Successfully");
         
-        const server = app.listen(PORT, ()=>{
+        const server = app.listen(PORT, "0.0.0.0", ()=>{
             console.log(`Server is running on PORT ${PORT}`);
         });
 
