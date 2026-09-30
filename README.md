@@ -253,7 +253,7 @@ BookMyShow-like-Backend/
 │   │   ├── db.js
 │   │   ├── gemini.js
 │   │   └── redis.js
-│   │
+│   │    
 │   ├── controllers/
 │   │   ├── booking.controller.js
 │   │   ├── movie.controller.js
@@ -615,34 +615,36 @@ Docker configuration and container testing are part of the deployment stage.
 
 ### ☁️ Azure Deployment
 
-The backend has been deployed and tested on a Microsoft Azure Ubuntu Virtual Machine using Docker and Docker Compose.
+The backend was deployed and tested using Microsoft Azure during the infrastructuee/deployment phase.
 
-#### Deployment Architecture
+#### Azure Deployment included:
 
-Client
-↓
-Azure Public IP
-↓
-Azure Network Security Group
-↓
-Azure Ubuntu VM
-↓
-Docker Compose
-├── Node.js + Express Backend
-└── Redis
-↓
-MongoDB Atlas
+* Azure Virtual Machine
+* Virtual Network
+* Network Security group
+* Public IP
+* Managed Disk
+* SSH based server access
+* Docker containerization
 
+The azure infrastructure was removed after deployment testing to avoid unnecessary cloud-resource usage.
 
-#### Azure Infrastructure
+The production/demo backend is currently deployed on Render. 
 
-- **Azure Virtual Machine** — Ubuntu 24.04 LTS
-- **Node.js** — v24
-- **Docker** — Containerized backend deployment
-- **Docker Compose** — Used to orchestrate the backend and Redis services
-- **Redis** — Running as a Docker container
-- **MongoDB Atlas** — Cloud database
-- **Azure Network Security Group (NSG)** — TCP port `8000` configured for API access
+### ☁️ Render Deployment
+
+The backend is currently deployed on Render
+
+Production API:
+
+`https://bookmyshow-like-backend.onrender.com `
+
+Swagger API Documentation:
+
+`https://bookmyshow-like-backend.onrender.com/api-docs/`
+
+The Render deployment runs the Node.js/Express backend and connects to the required external services
+such as MongoDB Atlas, Redis, Cloudinary, Gemini, and Resend through enviornment variables.
 
 #### Docker Services
 
@@ -679,7 +681,7 @@ Port: 8000
                            ↓
                     ┌──────────────┐
                     │   Express    │
-                    │     API      │
+                    │     API/     │
                     └──────┬───────┘
                            │
               ┌────────────┼────────────┐
@@ -739,6 +741,29 @@ CORS configuration
 RESEND configuration
 
 The exact environment variable names should be taken from the project's `.env` configuration.
+
+
+### ✅ Project Status
+
+Project: Complete
+
+Completed:
+
+* Backend API development
+* Authentication & authorization
+* Admin management
+* Movie/theatre/screen/seat/show management
+* Booking system
+* Payment system
+* Redis caching
+* Semantic search
+* Swagger/OpenAPI documentation
+* Docker configuration
+* Azure deployment and testing
+* Render deployment
+* Production API verification
+* Github repository
+* Final Azure ressource cleanup
 
 ### 🎯 Future Improvements
 
