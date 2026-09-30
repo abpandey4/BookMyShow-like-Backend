@@ -789,7 +789,6 @@ Completed:
 * Production API verification
 * Github source-code management 
 
-
 ### 🎯 Future Improvements
 
 Possible future improvements include:
