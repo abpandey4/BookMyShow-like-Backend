@@ -646,6 +646,27 @@ Swagger API Documentation:
 The Render deployment runs the Node.js/Express backend and connects to the required external services
 such as MongoDB Atlas, Redis, Cloudinary, Gemini, and Resend through enviornment variables.
 
+
+### Deployment Architecture
+
+```Client
+   ↓
+Render
+   ↓
+Node.js + Express API
+   ↓
+┌─────────────┬─────────────┬─────────────┐
+↓             ↓             ↓
+MongoDB      Redis       Cloudinary
+Atlas
+   ↓
+Gemini / Semantic Search
+   ↓
+Resend / Email Service
+
+```
+
+
 #### Docker Services
 
 The application uses two Docker Compose services:
@@ -745,25 +766,29 @@ The exact environment variable names should be taken from the project's `.env` c
 
 ### ✅ Project Status
 
-Project: Complete
+Project: Completed
+
+The BookMyShow-like Backend project has completed development,testing, documentation, deployment, and final cloud cleanup.
 
 Completed:
 
-* Backend API development
-* Authentication & authorization
-* Admin management
+* User Authentication and Authorization
+* Admin Authentication & Authorization
 * Movie/theatre/screen/seat/show management
 * Booking system
 * Payment system
+* Booking cancellation and refund handling
 * Redis caching
-* Semantic search
+* Semantic movie search
+* Cloudinary media management
+* Email notifications
 * Swagger/OpenAPI documentation
-* Docker configuration
-* Azure deployment and testing
+* Docker containerisation
+* Azure deployment and verification
 * Render deployment
 * Production API verification
-* Github repository
-* Final Azure ressource cleanup
+* Github source-code management 
+
 
 ### 🎯 Future Improvements
 
